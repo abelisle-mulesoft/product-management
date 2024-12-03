@@ -2,40 +2,99 @@ openapi: 3.0.2
 info:
   title: Product Management
   description: |
-    Specifications of the legacy homegrown product management microservice
+    Specifications of the product management microservice.
   contact:
     name: Alan Belisle
     email: abelisle@salesforce.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  version: 1.1.0
 tags:
 - name: products
   description: Operations about products
 paths:
   /products:
+    get:
+      tags:
+      - products
+      summary: Retrieve all products
+      operationId: get-all-products
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
     post:
       tags:
       - products
-      summary: Create products
-      operationId: createProducts
+      summary: Create a new product
+      operationId: create-product
       requestBody:
-        description: Products to create
+        description: Product to create
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Product'
+              $ref: "#/components/schemas/Product"
       responses:
         "201":
-          description: Products created successfully
+          description: Successful operation
+  "/products/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Product's unique identifier
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - products
+      summary: Retrieve product by id
+      operationId: get-product-by-id
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    put:
+      tags:
+        - products
+      summary: Update product by id
+      operationId: update-product-by-id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      tags:
+        - products
+      summary: Delete product by id
+      operationId: delete-product-by-id
+      responses:
+        "200":
+          description: Successful operation
+
 components:
   schemas:
     Product:
       required:
-      - companyName
+      - productName
       type: object
       properties:
         productId:
